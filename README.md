@@ -84,4 +84,8 @@ For example:
 ./runsible.py -t app
 # Which executes:
 # ansible-playbook playbooks/app.yaml -e @creds.yaml --ask-vault-pass -e state="absent"
+
+./runsible.py -t iapp -n iapp_Web1 -i 10.1.10.11 -g appservers
+# Which executes:
+# ansible-playbook playbooks/iapp.yaml -e @creds.yaml --ask-vault-pass -e service_name="iapp_Web1" -e service_ip="10.1.10.11" -e service_group="appservers" -e state="absent"
 ```
