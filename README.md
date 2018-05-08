@@ -1,9 +1,7 @@
 
 ## Table of Contents
 - [Description](#description)
-- [Installation](#installation)
-	- [Run](#run)
-	- [Credentials](#credentials)
+- [Credentials](#credentials)
 - [Playbooks](#playbooks)
 	- [Deploy](#deploy)
 	- [Teardown](#teardown)
@@ -20,20 +18,6 @@ The purpose of this repository is to provide basic demo of deploying BIG-IP
 services using Ansible.
 
 &nbsp;&nbsp;
-
-## Installation
-
-### Run
-```shell
-# Stable
-docker run -it artioml/f5-ansible
-
-# Stable, runs as root (for Drone CI/CD)
-docker run -it artioml/f5-ansible:su
-
-# Experimental
-docker run -it artioml/f5-ansible:dev
-```
 
 ### Credentials
 The encrypted [vault](https://docs.ansible.com/ansible/latest/vault.html) file ([creds.yaml](creds.yaml)) contains the BIG-IP credentials.
