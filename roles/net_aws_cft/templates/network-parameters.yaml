@@ -1,5 +1,0 @@
-deploymentName: "{{deploymentName}}"
-availabilityZones: "{{availabilityZones}}"
-restrictedSrcAddress: "{{restrictedSrcAddress}}"
-
-

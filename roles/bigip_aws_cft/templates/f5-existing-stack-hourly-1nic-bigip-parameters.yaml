@@ -1,5 +1,0 @@
-sshKey: "{{ aws_key_name }}"
-Vpc: "{{ vpc }}"
-subnet1Az1: "{{ public_subnet }}"
-imageName: "{{ image_name }}"
-instanceType: "{{ aws_instance_type }}"
