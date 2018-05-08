@@ -7,9 +7,9 @@
 
   vars:
     state: "present"
-    service_name: "iapp_Web"
-    service_ip: "10.100.115.10"
-    service_group: "webservers"
+    service_name: "iapp_Web101"
+    service_ip: "10.1.10.101"
+    service_group: "appservers"
 
   tasks:
     - import_tasks: getsl.yml
@@ -31,9 +31,5 @@
         user: "{{ bigip_user }}"
         password: "{{ bigip_pass }}"
         validate_certs: no
-
-    - import_tasks: slack.yml
-      vars:
-        msg: "Service template *{{ service_name }}*"
 
 ...
