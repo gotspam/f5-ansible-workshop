@@ -9,7 +9,7 @@
     state: "present"
     service_name: ""
     service_ip: ""
-    service_group: "webservers"
+    service_group: ""
 
   tasks:
     - import_tasks: getsl.yaml

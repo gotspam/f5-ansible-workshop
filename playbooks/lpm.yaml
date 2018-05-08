@@ -1,12 +1,12 @@
 ---
 
-- name: "Imperative: Get Virtual Server Info"
+- name: "Imperative: Get Pool Member Info"
   hosts: bigips
   gather_facts: False
   connection: local
 
   vars:
-    service_ip: ""
+    pool: ""
 
   environment: "{{ bigip_env }}"
 
@@ -14,7 +14,7 @@
     - name: View system version and LTM configuration
       bigip_command:
         commands:
-          - list /ltm virtual recursive | grep 'ltm virtual\|pool\|{{service_ip}}'
+          - list /ltm pool {{pool}}
       register: result
 
     - debug: msg="{{ result.stdout_lines }}"

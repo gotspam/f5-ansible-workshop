@@ -17,7 +17,7 @@ __version__ = '1.0.3'
 def funArgParser():
 	objArgParser = argparse.ArgumentParser(
 		description = 'Run Ansible playbooks, executing the defined tasks on targeted hosts',
-		epilog = 'https://github.com/ArtiomL/f5-ansible')
+		epilog = 'https://github.com/gotspam/f5-ansible-workshop')
 	objArgParser.add_argument('-c', '--iac', help ='infrastructure as code build', action = 'store_true')
 	objArgParser.add_argument('-d', '--deploy', help ='deploy a playbook (default)', action = 'store_true')
 	objArgParser.add_argument('-g', '--group', help ='inventory group for service nodes', dest = 'group')
@@ -32,10 +32,10 @@ def funArgParser():
 def main():
 	objArgs = funArgParser()
 	strParams = ''
-	strPlay = 'playbooks/%s.yml' % objArgs.PLAYBOOK
+	strPlay = 'playbooks/%s.yaml' % objArgs.PLAYBOOK
 	if objArgs.iac:
 		intExit = 0
-		diConfig = yaml.load(open('iac/config.yml', 'r'))
+		diConfig = yaml.load(open('iac/config.yaml', 'r'))
 		for strName, diVars in diConfig['apps'].iteritems():
 			strParams = '-e service_name="%s" ' % strName
 			if not diVars['state']:
@@ -43,7 +43,7 @@ def main():
 			else:
 				strParams += '-e service_ip="%s" ' % diVars['ip']
 				strParams += '-e service_group="%s" ' % diVars['group']
-			strCmd = 'ansible-playbook %s -e @creds.yml --vault-password-file .password %s' % (strPlay, strParams)
+			strCmd = 'ansible-playbook %s -e @creds.yaml --vault-password-file .password %s' % (strPlay, strParams)
 			intExit += subprocess.call(strCmd, shell = True)
 		sys.exit(intExit)
 
@@ -57,7 +57,7 @@ def main():
 		strParams += '-e service_ip="%s" ' % objArgs.ip
 	if objArgs.name:
 		strParams += '-e service_name="%s" ' % objArgs.name
-	strCmd = 'ansible-playbook %s -e @creds.yml --ask-vault-pass %s' % (strPlay, strParams)
+	strCmd = 'ansible-playbook %s -e @creds.yaml --ask-vault-pass %s' % (strPlay, strParams)
 	sys.exit(subprocess.call(strCmd, shell = True))
 
 

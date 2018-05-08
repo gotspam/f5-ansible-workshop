@@ -1,5 +1,5 @@
 ---
-name: "www"
+name: "web2"
 template: f5.http
 vars:
   asm__asm_template: POLICY_TEMPLATE_RAPID_DEPLOYMENT
@@ -19,7 +19,7 @@ vars:
   net__snat_type: automap
   net__v13_tcp: "yes"
   net__vlan_mode: all
-  pool__addr: "10.1.10.99"
+  pool__addr: "10.1.10.12"
   pool__fallback_persist: "/#source#"
   pool__http: "/#create_new#"
   pool__lb_method: least-connections-member
@@ -62,10 +62,7 @@ tables:
     - port_secure
     - connection_limit
     rows:
-    - - "10.1.20.13"
-      - "443"
-      - "0"
-    - - "10.1.20.14"
+    - - "10.1.20.17"
       - "443"
       - "0"
   server_pools__servers: {}
