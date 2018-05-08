@@ -1,0 +1,55 @@
+---
+
+- name: Add node by their FQDN
+  bigip_node:
+      state: "present"
+      partition: "{{partition}}"
+      fqdn: "{{ node_fqdn }}"
+      name: "{{ node_fqdn }}"
+  delegate_to: localhost
+  register: result
+
+- name: Building REST payload for the asm loggging profile to remote analytics server
+  template: src="asm_logging_profile_payload.j2" dest="{{ install_path }}/state_cache/{{ deploymentName }}/asm_logging_profile_payload-{{ service }}.json"
+  delegate_to: localhost
+
+- name: Deploying/updating ASM Logging Profile to send to Remote Analytics Server
+  delegate_to: localhost
+  bigip_rest_wrapper:
+      state=present
+      host={{ ansible_ssh_host }}
+      port={{ bigip_port }}
+      user={{ bigip_user }}
+      password={{ bigip_password }}
+      partition={{partition}}
+      collection_path="mgmt/tm/security/log/profile"
+      payload_file="{{ install_path }}/state_cache/{{ deploymentName }}/asm_logging_profile_payload-{{ service }}.json"
+      resource_key="name"
+
+
+- name: Import and activate ASM policy
+  delegate_to: localhost
+  bigip_asm_policy:
+    name: "{{ asm_policy_name }}"
+    partition: "{{ partition }}"
+    file: "{{ role_path }}/files/asm-policy-{{asm_policy_name}}.xml"
+    active: yes
+    state: present
+
+- name: Create policy which is immediately published
+  delegate_to: localhost
+  bigip_policy:
+    name: "{{ ltm_policy_name }}"
+    partition: "{{ partition }}"
+    state: present
+
+- name: Add a rule to the new policy - Immediately published
+  delegate_to: localhost
+  bigip_policy_rule:
+    policy: "{{ ltm_policy_name }}"
+    name: rule-1
+    actions:
+      - type: enable
+        asm_policy: "/{{ partition }}/{{ asm_policy_name }}"
+
+

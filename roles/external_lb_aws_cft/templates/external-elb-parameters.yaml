@@ -1,0 +1,9 @@
+deploymentName: "{{deploymentName}}"
+serviceName: "{{service_name}}"
+poolPort: "{{vs_port}}"
+vpc: "{{vpc}}"
+subnets: "{{subnets}}"
+restrictedSrcAddress: "{{restrictedSrcAddress}}"
+certificateId: "{{certificateId}}"
+
+

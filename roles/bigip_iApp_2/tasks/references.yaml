@@ -1,0 +1,166 @@
+---
+
+- name: Add node by their FQDN for application pool
+  bigip_node:
+      state: "present"
+      partition: "{{partition}}"
+      fqdn: "{{ node_fqdn }}"
+      name: "{{ node_fqdn }}"
+  delegate_to: localhost
+  register: result
+
+- name: Uploading SSL Certificates
+  delegate_to: localhost
+  bigip_ssl_certificate:
+    partition: "{{partition}}"
+    state: "present"
+    name: "{{ client_ssl_cert_name }}"
+    cert_content: "{{ lookup('file', 'ssl/website.crt') }}"
+    key_content: "{{ lookup('file', 'ssl/website.key') }}"
+
+# - name: Creating SSL profiles
+#   delegate_to: localhost
+- name: Creating SSL Profiles
+  delegate_to: localhost
+  bigip_rest_wrapper:
+    state=present
+    host={{ ansible_ssh_host }}
+    port={{ bigip_port }}
+    user={{ bigip_user }}
+    password={{ bigip_password }}
+    partition={{ partition }}
+    payload='{
+              "name":"{{service_name}}_clientssl",
+              "partition":"{{partition}}",
+              "defaultsFrom":"/Common/clientssl",
+              "cert":"{{service_name}}.crt",
+              "key":"{{service_name}}.key"
+             }'
+    collection_path="mgmt/tm/ltm/profile/client-ssl"
+    resource_key="name"
+
+- name: Deploying/updating high speed logging pool
+  delegate_to: localhost
+  bigip_pool:
+      partition: "{{partition}}"
+      name: "{{syslog_pool_name}}"
+      lb_method: "{{ lb_method }}"
+      slow_ramp_time: "{{ slow_ramp_time }}"
+      monitors: "{{ monitors }}"
+
+- name: Add members to high speed logging pool
+  delegate_to: localhost
+  bigip_pool_member:
+      partition: "{{partition}}"
+      pool: "{{ syslog_pool_name }}"
+      host: "{{ item.host }}"
+      port: "{{ item.port }}"
+  with_items: "{{ syslog_pool_members }}"
+
+- name: Building REST payload for the asm loggging profile to remote analytics server
+  template: src="asm_logging_profile_payload.j2" dest="{{ install_path }}/state_cache/{{ deploymentName }}/asm_logging_profile_payload-{{ service }}.json"
+  delegate_to: localhost
+
+- name: Deploying/updating ASM Logging Profile to send to Remote Analytics Server
+  delegate_to: localhost
+  bigip_rest_wrapper:
+      state=present
+      host={{ ansible_ssh_host }}
+      port={{ bigip_port }}
+      user={{ bigip_user }}
+      password={{ bigip_password }}
+      partition={{partition}}
+      collection_path="mgmt/tm/security/log/profile"
+      payload_file="{{ install_path }}/state_cache/{{ deploymentName }}/asm_logging_profile_payload-{{ service }}.json"
+      resource_key="name"
+
+# AVR module required to make this call
+- name: Deploying/updating Analytics Profile
+  delegate_to: localhost
+  bigip_rest_wrapper:
+      partition={{ partition }}
+      state=present
+      host={{ ansible_ssh_host }}
+      port={{ bigip_port }}
+      user={{ bigip_user }}
+      password={{ bigip_password }}
+      collection_path="mgmt/tm/ltm/profile/analytics"
+      resource_key="name"
+      payload='{"name":"{{ analytics_profile_name }}","partition":"{{partition}}","capturedTrafficExternalLogging":"disabled","capturedTrafficInternalLogging":"disabled","collectGeo":"enabled","collectIp":"enabled","collectMaxTpsAndThroughput":"enabled","collectMethods":"enabled","collectPageLoadTime":"enabled","collectResponseCodes":"enabled","collectSubnets":"enabled","collectUrl":"enabled","collectUserAgent":"enabled","collectUserSessions":"enabled","collectedStatsExternalLogging":"disabled","collectedStatsInternalLogging":"enabled","defaultsFrom":"/Common/analytics","notificationByEmail":"disabled","notificationBySnmp":"disabled","notificationBySyslog":"disabled","partition":"Common","publishIruleStatistics":"disabled","sampling":"enabled","sessionCookieSecurity":"ssl-only","sessionTimeoutMinutes":"5"}'
+  when: deploy_analytics == "true"
+
+- name: Uploading Datagroup ... background for sorry page
+  delegate_to: localhost
+  bigip_rest_wrapper:
+      state=present
+      partition={{ partition }}
+      host={{ ansible_ssh_host }}
+      port={{ bigip_port }}
+      user={{ bigip_user }}
+      password={{ bigip_password }}
+      collection_path="mgmt/tm/ltm/data-group/internal"
+      resource_key="name"
+      payload='{"name":"background_images","partition":"{{partition}}","type":"string","records":[{"name":"{{image_background}}"}]}'
+
+- name: Uploading Datagroup ... image for sorry page
+  delegate_to: localhost
+  bigip_rest_wrapper:
+      state=present
+      partition={{ partition }}
+      host={{ ansible_ssh_host }}
+      port={{ bigip_port }}
+      user={{ bigip_user }}
+      password={{ bigip_password }}
+      collection_path="mgmt/tm/ltm/data-group/internal"
+      resource_key="name"
+      payload='{"name":"sorry_images","partition":"{{partition}}","type":"string","records":[{"name":"{{image_sorry}}"}]}'
+
+
+- name: Uploading iRules ... sorry_page_rule
+  delegate_to: localhost
+  bigip_irule:
+      name: "irule_sorry_page"
+      partition: "{{partition}}"
+      content: "{{ lookup('file', 'irule_sorry_page.tcl') }}"
+      module: "ltm"
+      state: "present"
+
+- name: Uploading iRules ... sorry_page_rule
+  delegate_to: localhost
+  bigip_irule:
+      name: "irule_demo_analytics"
+      partition: "{{partition}}"
+      content: "{{ lookup('file', 'irule_demo_analytics.tcl') }}"
+      module: "ltm"
+      state: "present"
+
+
+- name: Import and activate ASM policy
+  delegate_to: localhost
+  bigip_asm_policy:
+    name: "{{ asm_policy_name }}"
+    partition: "{{ partition }}"
+    file: "{{ role_path }}/files/asm-policy-{{asm_policy_name}}.xml"
+    active: yes
+    state: present
+
+- name: Create policy which is immediately published
+  delegate_to: localhost
+  bigip_policy:
+    name: "{{ ltm_policy_name }}"
+    partition: "{{ partition }}"
+    state: present
+
+- name: Add a rule to the new policy - Immediately published
+  delegate_to: localhost
+  bigip_policy_rule:
+    policy: "{{ ltm_policy_name }}"
+    name: rule-1
+    actions:
+      - type: enable
+        asm_policy: "/{{ partition }}/{{ asm_policy_name }}"
+
+
+
+
+

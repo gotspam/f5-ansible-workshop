@@ -1,0 +1,22 @@
+---
+
+- name: "Imperative: Get Virtual Server Info"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+
+  vars:
+    vs_addr: ""
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: View system version and LTM configuration
+      bigip_command:
+        commands:
+          - list /ltm virtual | grep 'ltm virtual\|pool\|{{vs_addr}}'
+      register: result
+
+    - debug: msg="{{ result.stdout_lines }}"
+
+...

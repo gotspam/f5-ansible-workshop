@@ -1,0 +1,16 @@
+---
+
+- name: Create a pool playbook
+  hosts: bigips
+  connection: local
+
+  tasks:
+    - name: Create app1 server pool
+      bigip_pool:
+        name: app1_pl
+        monitors: "/Common/http"
+        lb_method: round-robin
+        password: admin
+        server: 10.1.1.245
+        user: admin
+        validate_certs: no
