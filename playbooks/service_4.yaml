@@ -1,0 +1,8 @@
+---
+-
+  hosts: localhost
+  roles:
+    - service_4
+  vars:
+    resource_group_name: "10.1.1.131"
+    state: "present"
