@@ -1,0 +1,60 @@
+---
+
+- name: "Imperative: Deploy / teardown a web app (VS, pool, nodes)"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+  vars_files:
+    - ../vars/appseedinfo.yaml
+
+  vars:
+    state: "present"
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: Adjust a VS
+      bigip_virtual_server:
+        name: "{{ vs_name }}"
+        destination: "{{ vs_ip }}"
+        port: "{{ vs_port }}"
+        snat: "{{ vs_snat }}"
+        all_profiles:
+          - "tcp-lan-optimized"
+          - "http"
+          - "analytics"
+        state: "{{ state }}"
+
+    - name: Adjust a pool
+      bigip_pool:
+        name: "{{ pl_name }}"
+        monitors: "{{ pl_monitor }}"
+        lb_method: "{{ pl_lb }}"
+        state: "{{ state }}"
+
+    - name: Add nodes
+      bigip_node:
+        name: "{{ item.name }}"
+        host: "{{ item.host }}"
+        state: "{{ state }}"
+      loop:
+        - { name: "{{ nd_ip1 }}", host: "{{ nd_ip1 }}" }
+        - { name: "{{ nd_ip2 }}", host: "{{ nd_ip2 }}" }
+
+    - name: Add nodes to pool
+      bigip_pool_member:
+        host: "{{ item.host }}"
+        port: "{{ nd_port }}"
+        pool: "{{ pl_name }}"
+        state: "{{ state }}"
+      loop:
+        - { host: "{{ nd_ip1 }}" }
+        - { host: "{{ nd_ip2 }}" }
+      when: state == "present"
+
+    - name: Update a VS
+      bigip_virtual_server:
+        name: "{{ vs_name }}"
+        pool: "{{ pl_name }}"
+        state: "{{ state }}"
+      when: state == "present"

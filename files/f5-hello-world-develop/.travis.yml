@@ -1,0 +1,53 @@
+# f5-hello-world - CI Build
+# https://github.com/f5devcentral/f5-hello-world
+# Artiom Lichtenstein, Hitesh Patel
+
+sudo: required
+
+env:
+  global:
+  - COMMIT=${TRAVIS_COMMIT::8}
+  - REPO=f5devcentral/f5-hello-world
+  - secure: "FH10q9+Lrmvw+Uih/W1j36wvef3hpWeL8oln5Ig7JswpDUJEnpg1QyB3AobDDFjfsvGS64zL7ZcxXErwOmivMb1gJJCLu+p56uOjNhuaxP7clqxcPmmib+pi9hXgoewIi9OBKTLFd51hqd2jCvMrMPEhRepzTm4Cyw1En1YA8BFH/+MVN27j4564r9BJyFjYmZt/xrMSH5Iz4JLs/2CC9RldLnyAZdb9Y5b/qbbmU4FLzqOxv6gf3FTJo64l11AOactPApGhYZTAUW436NGXW4oifg6oCGGo4qTAhK4jCLBcI/tvi9v8AyoYl6T/QwZfnNDF3xZEgUmk5BwFbUCBmMr3P6zAEBTtRYECeBFgnT75JCJceuN6GbFgtgbj7kWAmleg98Lvo6NejkKtIKnFsfqfpV1sEYHRZlZqZmwKjxY7GVGF9vZ4HHzWlg4MphISk/LdVRi5G3m2XWmuUDJ3bIKiG5odUULjX45RFQ6lfueGdGbdmbjmfOIb3lPs/k3oaXYznPlsvEMxZtlhe4YIutoTxoteDVYIFuGJP3ZNOKqXY9CS/Pb2fWaF3PXEHsnmE/rriGJfSrLWznJ47hRJMUOzsZF5NfHKv3SLUmp10jK8dSnPK1BPrtzLskfOFV/5/whRfUJO6aSkxuwPm6FDv7C6cWWVzRq1hfgfoaO+k/A="
+  - secure: "QdAwJw3G3OzNDmxQVz3V6mwMGJ7ssxKoUmAX+DE049G4qO4GMOvo5SFRiD1JrTimLRZKCQk0SnZzyLLqkmCsdCst5uUcO45Lsm1x3p1l8xfa8fwA4yfqCNNFQ484xyyWxwPwkEiI1mAW/wJoinNuWcaZb3B8W9G6J9p671Fl8uyAm8HaExf0mB2h9CRJeVJYejHwX1OLb/V2AQVsG2KapcpL6OC6F6kJ1KXdvUY47awJR3Z7rg8ha9n4XY/Mpb478IKOQIKayXZzDy5rVF/gAuRFXVnCq43ZQItSZQQObXZCOxJyxOJ/JlJuYjKd9LU4brRYggWTtLToLoDkKEDeHxPkRSeIDpSpl1oWYbVRIHXgB/VhdR7XDDmyPdcNe99NjI0XoWxl3DlGicXaKzIr9+hqY5h27I9i2TKLJscmOwnrT6DW6F4E5ZtVphGUo5pPGfKglQ0DCS0075nawczJVo2s7wcsS3uldbsbkCed/STaGvUEpXjclDxnhc7nSlZUmX+4K3cfdrLp6TyEahDra8qft0n1Khx5J72vycKgERUOGSxnQ1+8CZ7bNKYW2haRCYywSOmGrQBBG+yZOMZ3gUGUBMKrEKhD2wSbIjrC2NFxtmiS/R/98dELSkw5nL2jYQuwC/QxKVoJEfr+u/Qk5U4F65UaoqP6jZCu9H8cYmY="
+
+language: node_js
+
+node_js:
+  - "lts/*"
+
+services:
+  - docker
+
+install:
+  - npm install -g wscat3
+
+script:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+  - export TAG=`if [[ $TRAVIS_PULL_REQUEST == "false" ]] && [[ $BRANCH == "master" ]]; then echo "latest"; else echo "$BRANCH"; fi`
+  - export WSTAG=`if [[ $TAG == "latest" ]]; then echo "ws"; else echo "$TAG-ws"; fi`
+  - echo "TAG=$TAG, WSTAG=$WSTAG"
+  - export REPO=f5devcentral/f5-hello-world
+  - docker build -t $REPO:$TAG -f Dockerfile .
+  - cd ws
+  - docker build -t $REPO:$WSTAG -f Dockerfile .
+  - cd ..
+  - docker run -dit -p 80:8080 -p 443:8443 $REPO:$TAG
+  - docker run -dit -p 4433:4433 $REPO:$WSTAG
+  - docker ps -a
+  - curl -s http://127.0.0.1/uri$(shuf -i 0-1313 -n 1)/index.php | grep 'hello, world'
+  - curl -sk https://127.0.0.1/uri$(shuf -i 0-1313 -n 1)/secure/index.php -u user:user | grep '<td>user</td>'
+  - echo 'hello, world' | wscat -s echo ws://127.0.0.1:4433 | grep 'hello, world'
+
+after_success:
+  - docker images
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+    docker login -u $DOCKER_USER -p $DOCKER_PASS;
+    docker push $REPO:$TAG;
+    docker push $REPO:$WSTAG;
+    fi;
+
+notifications:
+  slack:
+  - secure: "OJcTMFYMRsxe/77lriPflzH9c+1/+og4aRXYt5kJCKpdBaq2kap4WaWWNMMQJn3p2q4scq/brA+HOKYOsIFt7EWFFRWV23QUvxoVYn9jpWDYan50ZhElOguicsG3MXoBWLE+9hqfIhwRkiT1z5BL3fnxrGxMQRzvGQAI9h0eeR3VKypnCgxn5tBYqvYYzEK734dCsCnpabsu8RAu9tE5hAI9dPav1pLG+j8izGgUMph0O4K1r8QQjuhSYSTFXWYr2cpTdqZSOh3zbcXGBasJ1D8JzCCHQ2WikZGv1+KBtJqGXL4cT3scOlRehUFdKqMv/gx/2vCobnSlwdYmTMKMrPX4YYObSftD0qMcuVyDK+rA3BWmiPOfaqoxkLG5NgdzCgxo9v1CXb5HcOcvVIVPZaaOSo6rITPSsbNlndAYlzRDZipEl9rRVfo5UnBHWpdIN+eIsUfJXHaPNus2CvyFz8UVaWe04OrBH9QgR+9H8Id2fET0TX6YLl902ig8F7YHPh7CddTNgrLJYkSpsVcFwusiWNBdwQILZiVshF0wVvPBmrK4KXsK3mgwkB1aOxT/A/4CknIWDZLI5f9zg8ZT422kjvTndwUKCiBau/+BKcXa5HMHTSNFK8DVHvSvqvR9lHs0+5SPT0AaSJmsw67eBddMOZA/dwfl84sJj4ImyL8="

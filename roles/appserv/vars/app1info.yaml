@@ -1,10 +1,10 @@
 ---
 
-vs_name: "app2_vs"
+vs_name: "app1"
 vs_ip: "10.1.10.30"
 vs_port: "80"
 vs_snat: "Automap"
-pl_name: "app2_pl"
+pl_name: "app1_pool"
 pl_monitor: "/Common/http"
 pl_lb: "round-robin"
 nd_qty: "2"

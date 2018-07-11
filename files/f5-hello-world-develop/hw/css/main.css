@@ -1,0 +1,216 @@
+/*
+	f5-hello-world - main.css
+	https://github.com/f5devcentral/f5-hello-world
+	Artiom Lichtenstein
+	v2.0.0, 19/12/2017
+*/
+
+body {
+	font-size:1.0em;
+	line-height:1.2;
+	font-weight:400;
+	font-family:Raleway,HelveticaNeue,"Helvetica Neue",Helvetica,Arial,sans-serif;
+	color:#222
+}
+
+.table-data {
+	font-size:14px;
+	line-height:19px;
+	font-family:"Cousine",monospace;
+}
+
+.table-data th {
+	background-color: #eee;
+}
+
+.soc {
+	margin:0; padding:0;
+	list-style:none;
+}
+
+.soc li {
+	display:inline-block;
+	*display:inline;
+	zoom:1;
+}
+
+.soc li a {
+	font-family:si!important;
+	font-style:normal;
+	font-weight:400;
+	-webkit-font-smoothing:antialiased;
+	-moz-osx-font-smoothing:grayscale;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-ms-box-sizing:border-box;
+	-o-box-sizing:border-box;
+	box-sizing:border-box;
+
+	-o-transition:.1s;
+	-ms-transition:.1s;
+	-moz-transition:.1s;
+	-webkit-transition:.1s;
+	transition:.1s;
+	-webkit-transition-property: transform;
+	transition-property: transform;
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
+
+	text-decoration:none;
+	text-align:center;
+	display:block;
+	position: relative;
+	z-index: 1;
+	width: 48px;
+	height: 48px;
+	line-height: 48px;
+	font-size: 26px;
+	-webkit-border-radius: 24px;
+	-moz-border-radius: 24px;
+	border-radius: 24px;
+	margin-right: 10px;
+	color: #ffffff;
+	background-color: none;
+}
+
+.soc a:hover {
+	z-index: 2;
+	-webkit-transform: scale(1.08);
+	transform: scale(1.08);
+}
+
+.soc-icon-last{
+	margin:0 !important;
+}
+
+.soc-github {
+	background-color: #221e1b;
+}
+.soc-github:before {
+	content:'\e032';
+}
+.soc-linkedin {
+	background-color: #3371b7;
+}
+.soc-linkedin:before {
+	content:'\e04c';
+}
+.soc-twitter {
+	background-color: #4da7de;
+}
+.soc-twitter:before {
+	content:'\e08d';
+}
+
+.animate {
+	-webkit-animation-duration: 2s;
+	animation-duration: 2s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+}
+
+.one {
+	-webkit-animation-delay: 0.2s;
+	-moz-animation-delay: 0.2s;
+	animation-delay: 0.2s;
+}
+
+.two {
+	-webkit-animation-delay: 0.4s;
+	-moz-animation-delay: 0.4s;
+	animation-delay: 0.4s;
+}
+
+.three {
+	-webkit-animation-delay: 0.8s;
+	-moz-animation-delay: 0.8s;
+	animation-delay: 0.8s;
+}
+
+.four {
+	-webkit-animation-delay: 1.6s;
+	-moz-animation-delay: 1.6s;
+	animation-delay: 1.6s;
+}
+
+@-webkit-keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.fadeIn {
+	-webkit-animation-name: fadeIn;
+	animation-name: fadeIn;
+}
+
+@-webkit-keyframes fadeInDown {
+	from {
+		opacity: 0;
+		-webkit-transform: translate3d(0, -100%, 0);
+		transform: translate3d(0, -100%, 0);
+	}
+	to {
+		opacity: 1;
+		-webkit-transform: none;
+		transform: none;
+	}
+}
+
+@keyframes fadeInDown {
+	from {
+		opacity: 0;
+		-webkit-transform: translate3d(0, -100%, 0);
+		transform: translate3d(0, -100%, 0);
+	}
+	to {
+		opacity: 1;
+		-webkit-transform: none;
+		transform: none;
+	}
+}
+
+.fadeInDown {
+	-webkit-animation-name: fadeInDown;
+	animation-name: fadeInDown;
+}
+
+.marTop15 {
+	margin-top: 15%;
+}
+
+.marTop30 {
+	margin-top: 30px;
+}
+
+.txtRight {
+	text-align: right;
+}
+
+.hw-nodeColor {
+  background-color: rgba(0,0,0,.1);
+  height: 4px;
+  border: 0;
+}
+
+.hw-ghblock {
+	margin-bottom: 4px;
+}
+
+.tab-pane.active {
+    border: 1px solid #ddd;
+    border-top: none;
+    padding: 10px;
+}

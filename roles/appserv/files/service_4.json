@@ -15,10 +15,10 @@
 				"serviceMain": {
 					"class": "Service_HTTPS",
 					"virtualAddresses": [
-						"10.1.10.40"
+						"10.1.10.50"
 					],
 					"snat": "auto",
-					"pool": "Pool1",
+					"pool": "service_4_pool",
 					"profileHTTP": {
 						"use": "HTTP_Profile"
 					},
@@ -30,7 +30,7 @@
 						"bigip": "/Common/Service_4_WAF"
 					}
 				},
-				"Pool1": {
+				"service_4_pool": {
 					"class": "Pool",
 					"monitors": [
 						"http"
@@ -38,13 +38,13 @@
 					"members": [{
 							"servicePort": 80,
 							"serverAddresses": [
-								"10.1.20.13"
+								"10.1.20.20"
 							]
 						},
 						{
 							"servicePort": 80,
 							"serverAddresses": [
-								"10.1.20.14"
+								"10.1.20.50"
 							]
 						}
 					]

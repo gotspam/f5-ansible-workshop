@@ -1,5 +1,20 @@
 ---
 
+<<<<<<< HEAD
+- name: "Imperative: Create new web app"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+
+  vars:
+    vsname: "app2_vs"
+    vsip: "10.1.10.20"
+    vsport: "443"
+    plname: "app2_pl"
+    pmport: "80"
+    pmhost1: "10.1.20.13"
+    pmhost2: "10.1.20.14"
+=======
 - name: "Imperative: Deploy / teardown a web app (VS, pool, nodes)"
   hosts: bigips
   gather_facts: False
@@ -8,11 +23,24 @@
     - /Users/rabago/Documents/f5-ansible-test1/vars/appinfo.yaml
 
   vars:
+>>>>>>> c817a04c04eda5f668b78a7d25a3d6dd95ebc77d
     state: "present"
 
   environment: "{{ bigip_env }}"
 
   tasks:
+<<<<<<< HEAD
+    - name: Adjust virtual server
+      bigip_virtual_server:
+        name: "{{ vsname }}"
+        destination: "{{ vsip }}"
+        port: "{{ vsport }}"
+        description: "Web App"
+        snat: "Automap"
+        all_profiles:
+          - "tcp-lan-optimized"
+          - "clientssl"
+=======
     - name: Adjust a VS
       bigip_virtual_server:
         name: "{{ vs_name }}"
@@ -21,19 +49,46 @@
         snat: "{{ vs_snat }}"
         all_profiles:
           - "tcp-lan-optimized"
+>>>>>>> c817a04c04eda5f668b78a7d25a3d6dd95ebc77d
           - "http"
           - "analytics"
         state: "{{ state }}"
 
     - name: Adjust a pool
       bigip_pool:
+<<<<<<< HEAD
+        name: "{{ plname }}"
+        monitors: "/Common/http"
+        monitor_type: "and_list"
+        slow_ramp_time: "120"
+        lb_method: "ratio-member"
+=======
         name: "{{ pl_name }}"
         monitors: "{{ pl_monitor }}"
         lb_method: "{{ pl_lb }}"
+>>>>>>> c817a04c04eda5f668b78a7d25a3d6dd95ebc77d
         state: "{{ state }}"
 
     - name: Add nodes
       bigip_node:
+<<<<<<< HEAD
+        name: "{{ pmhost1 }}"
+        host: "{{ pmhost1 }}"
+        state: "{{ state }}"
+      loop:
+        - { name: "{{ pmhost1 }}", host: "{{ pmhost1 }}" }
+        - { name: "{{ pmhost2 }}", host: "{{ pmhost2 }}" }
+
+    - name: Add nodes to pool
+      bigip_pool_member:
+        host: "{{ item.host }}"
+        port: "{{ pmport }}"
+        pool: "{{ plname }}"
+        state: "{{ state }}"
+      loop:
+        - { host: "{{ pmhost1 }}" }
+        - { host: "{{ pmhost2 }}" }
+=======
         name: "{{ item.name }}"
         host: "{{ item.host }}"
         state: "{{ state }}"
@@ -55,11 +110,17 @@
           host: "{{ nd_ip1 }}"
         - name: "{{ nd_ip2 }}"
           host: "{{ nd_ip2 }}"
+>>>>>>> c817a04c04eda5f668b78a7d25a3d6dd95ebc77d
       when: state == "present"
 
     - name: Update a VS
       bigip_virtual_server:
+<<<<<<< HEAD
+        name: "{{ vsname }}"
+        pool: "{{ plname }}"
+=======
         name: "{{ vs_name }}"
         pool: "{{ pl_name }}"
+>>>>>>> c817a04c04eda5f668b78a7d25a3d6dd95ebc77d
         state: "{{ state }}"
       when: state == "present"

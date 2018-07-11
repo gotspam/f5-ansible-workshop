@@ -2,8 +2,9 @@
 10.1.1.245
 
 [appservers]
-10.1.20.17
+10.1.20.17 ansible_user=root
+10.1.20.20 ansible_user=root
 
 [webservers]
-10.1.20.13
-10.1.20.14
+10.1.20.15 ansible_user=root
+10.1.20.16 ansible_user=root

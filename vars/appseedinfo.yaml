@@ -1,0 +1,13 @@
+---
+
+vs_name: "hack11"
+vs_ip: "10.1.10.11"
+vs_port: "80"
+vs_snat: "Automap"
+pl_name: "app2_pl"
+pl_monitor: "/Common/http"
+pl_lb: "round-robin"
+nd_qty: "2"
+nd_port: "80"
+nd_ip1: 10.1.20.17
+nd_ip2: 10.1.20.20
