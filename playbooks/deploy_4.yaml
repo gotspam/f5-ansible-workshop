@@ -1,0 +1,14 @@
+---
+- name: "Deploy App with Services"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+  roles:
+    - appserv
+  vars:
+    state: "present"
+
+  vars_files:
+    - ../roles/appserv/vars/app1info.yaml
+
+  environment: "{{ bigip_env }}"
