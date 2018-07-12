@@ -4,7 +4,7 @@
   gather_facts: False
   connection: local
   roles:
-    - appserv
+    - addwaf
   vars:
     state: "present"
 

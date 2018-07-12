@@ -63,3 +63,17 @@
         pool: "{{ pl_name }}"
         state: "{{ state }}"
       when: state == "present"
+
+    - name: Create Rapid Deployment Policy via REST and Attach to vs_ip
+      uri:
+        url: "https://{{ inventory_hostname }}/mgmt/tm/asm/policies/lAzoP99BpJD8V60jjHfqyg"
+        method: "PATCH"
+        user: "{{ bigip_user }}"
+        password: "{{ bigip_pass }}"
+        body_format: "json"
+        body: { "virtualServers": ["/Common/{{ vs_name }}"] }
+        validate_certs: False
+        status_code: 201
+        return_content: yes
+        ignore_errors: yes
+      when: state == "present"

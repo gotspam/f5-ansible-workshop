@@ -31,5 +31,3 @@
         user: "{{ bigip_user }}"
         password: "{{ bigip_pass }}"
         validate_certs: no
-
-...

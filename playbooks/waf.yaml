@@ -1,0 +1,37 @@
+---
+
+- name: "Create new device config"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+  vars_files:
+    - /Users/rabago/Documents/f5-ansible-test1/vars/appinfo.yaml
+
+  vars:
+    state: "present"
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: Adjust a VS
+      bigip_virtual_server:
+        name: "{{ vs_name }}"
+        destination: "{{ vs_ip }}"
+        port: "{{ vs_port }}"
+        snat: "{{ vs_snat }}"
+        all_profiles:
+          - "tcp-lan-optimized"
+          - "http"
+          - "analytics"
+        state: "{{ state }}"
+
+    - name: Create blank ASM policy
+      bigip_asm_policy:
+        server: 10.1.1.245
+        user: admin
+        password: admin
+        name: "test1"
+        template: Rapid Deployment Policy
+        active: yes
+        validate_certs: no
+      delegate_to: localhost

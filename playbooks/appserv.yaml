@@ -1,0 +1,8 @@
+---
+-
+  hosts: localhost
+  roles:
+    - service_4
+  vars:
+    resource_group_name: "{{ inventory_hostname }}"
+    state: "present"

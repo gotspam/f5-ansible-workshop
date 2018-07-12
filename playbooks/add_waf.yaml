@@ -1,0 +1,32 @@
+---
+
+- name: "Create new device config"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+  vars_files:
+    - ../vars/appseedinfo.yaml
+
+  vars:
+    state: "present"
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: Create Rapid Deployment Policy via REST and Attach to vs_ip
+      uri:
+        url: "https://{{ inventory_hostname }}/mgmt/tm/asm/policies"
+        method: "POST"
+        user: "{{ bigip_user }}"
+        password: "{{ bigip_pass }}"
+        body_format: "json"
+        body: {
+                 "name": "{{ vs_name }}",
+                 "templateReference": {"link": "https://{{ inventory_hostname }}/mgmt/tm/asm/policy-templates/EzpBNMs9gbVsF5uuiBjYDw"},
+                 "virtualServers": ["/Common/{{ vs_name }}"]
+                 }
+        validate_certs: False
+        status_code: 201
+        return_content: yes
+        ignore_errors: yes
+      #with_dict: "{{ config }}"

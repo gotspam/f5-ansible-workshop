@@ -23,8 +23,6 @@
             user: "{{ username }}"
             validate_certs: "{{ valid_certs }}"
         delegate_to: localhost
-        with_items:
-            - host: "10.1.20.11"
-              name: "10.1.20.11"
-            - host: "10.1.20.12"
-              name: "10.1.20.12"
+        loop:
+          - { host: "10.1.20.11" }
+          - { host: "10.1.20.12" }

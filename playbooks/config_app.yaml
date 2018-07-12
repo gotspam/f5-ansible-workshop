@@ -1,11 +1,11 @@
 ---
 
-- name: "Imperative: Deploy / teardown a web app (VS, pool, nodes)"
+- name: "Create new device config"
   hosts: bigips
   gather_facts: False
   connection: local
   vars_files:
-    - ../vars/appseedinfo.yaml
+    - /Users/rabago/Documents/f5-ansible-test1/vars/appinfo.yaml
 
   vars:
     state: "present"
@@ -63,3 +63,23 @@
         pool: "{{ pl_name }}"
         state: "{{ state }}"
       when: state == "present"
+
+    - name: Create Rapid Deployment Policy via REST and Attach to vs_ip
+      uri:
+        url: "https://{{ inventory_hostname }}/mgmt/tm/asm/policies"
+        method: "POST"
+        user: "{{ bigip_user }}"
+        password: "{{ bigip_pass }}"
+        body_format: "json"
+        body: {
+                 "name": "{{ vs_name }}",
+                 "templateReference": {"link": "https:/{{ inventory_hostname }}/mgmt/tm/asm/policy-templates/EzpBNMs9gbVsF5uuiBjYDw"},
+                 "enforcementMode": "blocking",
+                 "virtualServers": ["/Common/{{ vs_name }}"]
+                 }
+        validate_certs: False
+        status_code: 201
+        return_content: yes
+        ignore_errors: yes
+      when: state == "present"
+      #with_dict: "{{ config }}"
