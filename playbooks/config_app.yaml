@@ -5,8 +5,7 @@
   gather_facts: False
   connection: local
   vars_files:
-    - /Users/rabago/Documents/f5-ansible-test1/vars/appinfo.yaml
-
+    - ../vars/appseedinfo.yaml
   vars:
     state: "present"
 

@@ -8,5 +8,3 @@
     validate_certs: no
     return_content: yes
   register: service_list
-
-...

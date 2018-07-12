@@ -37,12 +37,12 @@ def main():
 		intExit = 0
 		diConfig = yaml.load(open('iac/config.yaml', 'r'))
 		for strName, diVars in diConfig['apps'].iteritems():
-			strParams = '-e service_name="%s" ' % strName
+			strParams = '-e vs_name="%s" ' % strName
 			if not diVars['state']:
 				strParams += '-e state="absent" '
 			else:
-				strParams += '-e service_ip="%s" ' % diVars['ip']
-				strParams += '-e service_group="%s" ' % diVars['group']
+				strParams += '-e vs_ip="%s" ' % diVars['ip']
+				strParams += '-e vs_group="%s" ' % diVars['group']
 			strCmd = 'ansible-playbook %s -e @creds.yaml --vault-password-file .password %s' % (strPlay, strParams)
 			intExit += subprocess.call(strCmd, shell = True)
 		sys.exit(intExit)
@@ -52,11 +52,11 @@ def main():
 	if objArgs.verbose:
 		strParams += '-vvv '
 	if objArgs.group:
-		strParams += '-e service_group="%s" ' % objArgs.group
+		strParams += '-e vs_group="%s" ' % objArgs.group
 	if objArgs.ip:
-		strParams += '-e service_ip="%s" ' % objArgs.ip
+		strParams += '-e vs_ip="%s" ' % objArgs.ip
 	if objArgs.name:
-		strParams += '-e service_name="%s" ' % objArgs.name
+		strParams += '-e vs_name="%s" ' % objArgs.name
 	strCmd = 'ansible-playbook %s -e @creds.yaml --ask-vault-pass %s' % (strPlay, strParams)
 	sys.exit(subprocess.call(strCmd, shell = True))
 

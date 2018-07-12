@@ -1,5 +1,5 @@
 ---
-name: "{{ service_name }}"
+name: "{{ vs_name }}"
 template: f5.http
 vars:
   asm__asm_template: POLICY_TEMPLATE_RAPID_DEPLOYMENT
@@ -19,7 +19,7 @@ vars:
   net__snat_type: automap
   net__v13_tcp: "yes"
   net__vlan_mode: all
-  pool__addr: "{{ service_ip }}"
+  pool__addr: "{{ vs_ip }}"
   pool__fallback_persist: "/#source#"
   pool__http: "/#create_new#"
   pool__lb_method: least-connections-member
@@ -62,7 +62,7 @@ tables:
     - port_secure
     - connection_limit
     rows:
-{% for host in groups[service_group] %}
+{% for host in groups[vs_group] %}
     - - "{{ host }}"
       - "443"
       - "0"

@@ -56,28 +56,28 @@ For example:
 
 ### Service Template
 ```shell
-./runsible.py {playbook_name} -n [service_name] -i [service_ip] -g [service_group]
+./runsible.py {playbook_name} -n [vs_name] -i [vs_ip] -g [vs_group]
 ```
 For example:
 ```shell
 ./runsible.py iapp -n iapp_Web1 -i 10.1.10.11 -g appservers
 # Which executes:
-# ansible-playbook playbooks/iapp.yaml -e @creds.yaml --ask-vault-pass -e service_name="iapp_Web1" -e service_ip="10.1.10.11" -e service_group="appservers"
+# ansible-playbook playbooks/iapp.yaml -e @creds.yaml --ask-vault-pass -e service_name="iapp_Web1" -e vs_ip="10.1.10.11" -e vs_group="appservers"
 
 ./runsible.py iapp -n iapp_Web2 -i 10.1.10.12 -g webservers
 # Which executes:
-# ansible-playbook playbooks/iapp.yaml -e @creds.yaml --ask-vault-pass -e service_name="iapp_Web2" -e service_ip="10.1.10.12" -e service_group="webservers"
+# ansible-playbook playbooks/iapp.yaml -e @creds.yaml --ask-vault-pass -e service_name="iapp_Web2" -e vs_ip="10.1.10.12" -e vs_group="webservers"
 ```
 
 ### List App Services
 ```shell
-./runsible.py {playbook_name} -n [service_name] -i [service_ip]
+./runsible.py {playbook_name} -n [vs_name] -i [vs_ip]
 ```
 For example:
 ```shell
 ./runsible.py lvs -n lvs -i 10.1.10.11
 # Which executes:
-# ansible-playbook playbooks/lvs.yaml -e @creds.yaml --ask-vault-pass -e service_ip="10.1.10.11"
+# ansible-playbook playbooks/lvs.yaml -e @creds.yaml --ask-vault-pass -e vs_ip="10.1.10.11"
 ```
 
 ### Toggle Pool Member Status
@@ -98,5 +98,5 @@ For example:
 
 ./runsible.py -t iapp -n iapp_Web1 -i 10.1.10.11 -g appservers
 # Which executes:
-# ansible-playbook playbooks/iapp.yaml -e @creds.yaml --ask-vault-pass -e service_name="iapp_Web1" -e service_ip="10.1.10.11" -e service_group="appservers" -e state="absent"
+# ansible-playbook playbooks/iapp.yaml -e @creds.yaml --ask-vault-pass -e vs_name="iapp_Web1" -e vs_ip="10.1.10.11" -e vs_group="appservers" -e state="absent"
 ```
