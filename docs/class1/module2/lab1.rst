@@ -58,13 +58,13 @@ You will create a playbook to deploy applications to previously provisioned webs
        tasks:
          - name: Upload green changes to server17
            copy:
-             src: ../roles/appserv/files/HackazonBlue.png
+             src: ../roles/appserv/files/HackazonGreen.png
              dest: /var/www/hackazon1/web/images/Hackazon.png
            tags: 17green
 
          - name: Upload green changes to server20
            copy:
-             src: ../roles/appserv/files/HackazonBlue.png
+             src: ../roles/appserv/files/HackazonGreen.png
              dest: /var/www/hackazon/web/images/Hackazon.png
            tags: 20green
 
@@ -79,4 +79,4 @@ You will create a playbook to deploy applications to previously provisioned webs
 
 #. Verify results by browsing to websites.
 
-   - Open browser to ``http2://10.1.20.17`` and ``http://10.1.20.20``.
+   - Type ``curl http://10.1.20.17`` and ``curl http://10.1.20.20``.

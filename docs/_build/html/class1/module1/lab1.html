@@ -214,9 +214,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../intro.html">1. Getting Started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../class1.html">2. Class - F5 Ansible Workshop</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="module1.html">2.1. Lab 1 – Speed of Human deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../module2/module2.html">2.2. Module – Basic BIG-IP administration with Ansible</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../module3/module2.html">2.3. Module – Working with Ansible variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../module4/module4.html">2.4. Module – Putting all together</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module2/module2.html">2.2. Lab 2 - Speed of Automation and Basic BIG-IP Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module3/module3.html">2.3. Lab 3 - App Deployment Workflows</a></li>
 </ul>
 </li>
 </ul>
@@ -239,6 +238,25 @@
 <h1>2.1.1. Deploy Web Applications<a class="headerlink" href="#deploy-web-applications" title="Permalink to this headline">¶</a></h1>
 <p>You will create a playbook to deploy applications to previously provisioned webservers.</p>
 <ol class="arabic">
+<li><p class="first">Edit ansible inventory file.</p>
+<ul class="simple">
+<li>Type <code class="docutils literal"><span class="pre">nano</span> <span class="pre">inventory/hosts</span></code></li>
+<li>Type the following into the <code class="docutils literal"><span class="pre">inventory/hosts</span></code> file</li>
+</ul>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">bigips</span><span class="p">]</span>
+<span class="mf">10.1</span><span class="o">.</span><span class="mf">1.245</span>
+
+<span class="p">[</span><span class="n">appservers</span><span class="p">]</span>
+<span class="mf">10.1</span><span class="o">.</span><span class="mf">20.17</span> <span class="n">ansible_user</span><span class="o">=</span><span class="n">root</span>
+<span class="mf">10.1</span><span class="o">.</span><span class="mf">20.20</span> <span class="n">ansible_user</span><span class="o">=</span><span class="n">root</span>
+<span class="c1">#10.1.1.252 ansible_user=root</span>
+
+<span class="p">[</span><span class="n">webservers</span><span class="p">]</span>
+<span class="mf">10.1</span><span class="o">.</span><span class="mf">20.15</span> <span class="n">ansible_user</span><span class="o">=</span><span class="n">root</span>
+<span class="mf">10.1</span><span class="o">.</span><span class="mf">20.16</span> <span class="n">ansible_user</span><span class="o">=</span><span class="n">root</span>
+</pre></div>
+</div>
+</li>
 <li><p class="first">Create a playbook <code class="docutils literal"><span class="pre">newapp.yaml</span></code>.</p>
 <ul class="simple">
 <li>Type <code class="docutils literal"><span class="pre">nano</span> <span class="pre">playbooks/newapp.yaml</span></code></li>
@@ -266,7 +284,7 @@
 
     <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">deploy</span> <span class="n">to</span> <span class="n">server5</span>
       <span class="n">copy</span><span class="p">:</span>
-        <span class="n">src</span><span class="p">:</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">rabago</span><span class="o">/</span><span class="n">Downloads</span><span class="o">/</span><span class="n">f5</span><span class="o">-</span><span class="n">hello</span><span class="o">-</span><span class="n">world</span><span class="o">-</span><span class="n">develop</span><span class="o">/</span><span class="n">hw</span><span class="o">/</span>
+        <span class="n">src</span><span class="p">:</span> <span class="o">../</span><span class="n">files</span><span class="o">/</span><span class="n">f5</span><span class="o">-</span><span class="n">hello</span><span class="o">-</span><span class="n">world</span><span class="o">-</span><span class="n">develop</span><span class="o">/</span><span class="n">hw</span><span class="o">/</span>
         <span class="n">dest</span><span class="p">:</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">server</span><span class="o">/</span><span class="mi">5</span><span class="o">/</span>
       <span class="n">tags</span><span class="p">:</span> <span class="n">serv5</span>
 
@@ -284,7 +302,7 @@
 
     <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">deploy</span> <span class="n">to</span> <span class="n">server6</span>
       <span class="n">copy</span><span class="p">:</span>
-        <span class="n">src</span><span class="p">:</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">rabago</span><span class="o">/</span><span class="n">Downloads</span><span class="o">/</span><span class="n">f5</span><span class="o">-</span><span class="n">hello</span><span class="o">-</span><span class="n">world</span><span class="o">-</span><span class="n">develop</span><span class="o">/</span><span class="n">hw</span><span class="o">/</span>
+        <span class="n">src</span><span class="p">:</span> <span class="o">../</span><span class="n">files</span><span class="o">/</span><span class="n">f5</span><span class="o">-</span><span class="n">hello</span><span class="o">-</span><span class="n">world</span><span class="o">-</span><span class="n">develop</span><span class="o">/</span><span class="n">hw</span><span class="o">/</span>
         <span class="n">dest</span><span class="p">:</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">server</span><span class="o">/</span><span class="mi">6</span><span class="o">/</span>
       <span class="n">tags</span><span class="p">:</span> <span class="n">serv6</span>
 </pre></div>
@@ -299,7 +317,7 @@
 </li>
 <li><p class="first">Verify results by browsing to websites.</p>
 <ul class="simple">
-<li>Open browser to <code class="docutils literal"><span class="pre">http2://10.1.10.15</span></code> and <code class="docutils literal"><span class="pre">http://10.1.20.16</span></code>.</li>
+<li>Type <code class="docutils literal"><span class="pre">curl</span> <span class="pre">http://10.1.10.15</span></code> and <code class="docutils literal"><span class="pre">curl</span> <span class="pre">http://10.1.20.16</span></code>.</li>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>

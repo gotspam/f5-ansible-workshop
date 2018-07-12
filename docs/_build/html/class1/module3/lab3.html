@@ -234,18 +234,26 @@
 <h1>2.3.3. Create VS, Pool and Members using App Services (AS3)<a class="headerlink" href="#create-vs-pool-and-members-using-app-services-as3" title="Permalink to this headline">¶</a></h1>
 <p>You will create a playbook to deploy VS, Pools and associated Members using App Services.</p>
 <p><strong>Create service playbook using AS3</strong></p>
-<ol class="arabic simple">
-<li>Examine playbook <code class="docutils literal"><span class="pre">service_4.yaml</span></code>.</li>
-<li>Run this playbook.<ul>
+<ol class="arabic">
+<li><p class="first">Examine playbook <code class="docutils literal"><span class="pre">service_4.yaml</span></code>.</p>
+</li>
+<li><p class="first">Run this playbook.</p>
+<ul class="simple">
 <li>Type <code class="docutils literal"><span class="pre">ansible-playbook</span> <span class="pre">playbooks/service_4.yaml</span> <span class="pre">-e</span> <span class="pre">&#64;creds.yaml</span> <span class="pre">--ask-vault-pass</span></code></li>
 </ul>
 </li>
-<li>Verify results in BIG-IP GUI.</li>
-<li>Run this playbook to teardown.<ul>
+<li><p class="first">Verify results in BIG-IP GUI and browse to <code class="docutils literal"><span class="pre">https://10.1.10.40</span></code>.</p>
+<p>You must be in the Service4 partition to see the serviceMain virtual server.
+AS3 is designed with multitenancy in mind.  Also, note that this application
+was deployed with an WAF security policy.</p>
+</li>
+<li><p class="first">Run this playbook to teardown.</p>
+<ul class="simple">
 <li>Type <code class="docutils literal"><span class="pre">ansible-playbook</span> <span class="pre">playbooks/destroy_all_services.yaml</span> <span class="pre">-e</span> <span class="pre">&#64;creds.yaml</span> <span class="pre">--ask-vault-pass</span></code></li>
 </ul>
 </li>
-<li>Verify results in BIG-IP GUI.</li>
+<li><p class="first">Verify results in BIG-IP GUI.</p>
+</li>
 </ol>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>

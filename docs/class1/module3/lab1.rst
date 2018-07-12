@@ -20,7 +20,7 @@ You will create a consolidated playbook to deploy VS, Pools and associated Membe
       connection: local
 
       vars:
-        vsname: "app2_vs"
+        vsname: "app2"
         vsip: "10.1.10.100"
         vsport: "443"
         plname: "app2_pl"
@@ -92,10 +92,10 @@ You will create a consolidated playbook to deploy VS, Pools and associated Membe
 
    .. hint::
 
-     You should see app2_vs deployed with 2 pool members.  App should be accessible on https://10.1.10.100.
+     You should see app2 deployed with 2 pool members.  App should be accessible on https://10.1.10.100.
 
 #. Run this playbook to teardown app.
 
    - Type ``ansible-playbook -e @creds.yaml --ask-vault-pass playbooks/app.yaml -e state="absent"``
 
-#. Verify that app2_vs, pool and nodes should be deleted in BIG-IP GUI.
+#. Verify that app2, pool and nodes should be deleted in BIG-IP GUI.

@@ -32,7 +32,7 @@ Use the ``-e``, or ``--extra-vars`` argument of ``ansible-playbook``
       tasks:
         - name: Modify pool member state
           bigip_pool_member:
-            state: (( state ))
+            state: {{ state }}
             session_state: "disabled"
             monitor_state: "disabled"
             host: "{{ pmhost }}"
@@ -48,7 +48,7 @@ Use the ``-e``, or ``--extra-vars`` argument of ``ansible-playbook``
    - Select **Local Traffic -> Pools -> Pool List -> hack11_pl -> Members**
 
    .. image:: /_static/image035.png
-         :height: 140px
+         :height: 200px
 
 **Create pool member enable playbook**
 
@@ -87,7 +87,7 @@ Use the ``-e``, or ``--extra-vars`` argument of ``ansible-playbook``
 
 #. Run this playbook enable pool member.
 
-   - Type ``ansible-playbook playbooks/pmena.yaml -e @creds.yaml --ask-vault-pass -e pool="hack11_pl" -e pmhost="10.1.20.17" -e pmport="80"``
+   - Type ``ansible-playbook playbooks/enable.yaml -e @creds.yaml --ask-vault-pass -e pool="hack11_pl" -e pmhost="10.1.20.17" -e pmport="80"``
 
 #. Verify if pool member 10.1.20.17 is ``enabled``
 

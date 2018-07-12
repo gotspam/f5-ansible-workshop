@@ -28,7 +28,7 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="2.3. Module – Working with Ansible variables" href="../module3/module2.html" />
+    <link rel="next" title="2.3. Lab 3 - App Deployment Workflows" href="../module3/module3.html" />
     <link rel="prev" title="2.2.2. Deploy BIG-IP App Services" href="lab2.html" />
 <!--
 # Copyright 2017 F5 Networks
@@ -215,8 +215,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../class1.html">2. Class - F5 Ansible Workshop</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../module1/module1.html">2.1. Lab 1 – Speed of Human deployment</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="module2.html">2.2. Lab 2 - Speed of Automation and Basic BIG-IP Tasks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../module3/module2.html">2.3. Module – Working with Ansible variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../module4/module4.html">2.4. Module – Putting all together</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module3/module3.html">2.3. Lab 3 - App Deployment Workflows</a></li>
 </ul>
 </li>
 </ul>
@@ -225,8 +224,8 @@
   <p class="topless"><a href="lab2.html"
                         title="previous chapter">2.2.2. Deploy BIG-IP App Services</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../module3/module2.html"
-                        title="next chapter">2.3. Module – Working with Ansible variables</a></p>
+  <p class="topless"><a href="../module3/module3.html"
+                        title="next chapter">2.3. Lab 3 - App Deployment Workflows</a></p>
         
       </div>
       <div class="col-md-offset-3 col-sm-offset-3 main">
@@ -265,7 +264,7 @@ Use the <code class="docutils literal"><span class="pre">-e</span></code>, or <c
   <span class="n">tasks</span><span class="p">:</span>
     <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Modify</span> <span class="n">pool</span> <span class="n">member</span> <span class="n">state</span>
       <span class="n">bigip_pool_member</span><span class="p">:</span>
-        <span class="n">state</span><span class="p">:</span> <span class="p">((</span> <span class="n">state</span> <span class="p">))</span>
+        <span class="n">state</span><span class="p">:</span> <span class="p">{{</span> <span class="n">state</span> <span class="p">}}</span>
         <span class="n">session_state</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span>
         <span class="n">monitor_state</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span>
         <span class="n">host</span><span class="p">:</span> <span class="s2">&quot;{{ pmhost }}&quot;</span>
@@ -283,7 +282,7 @@ Use the <code class="docutils literal"><span class="pre">-e</span></code>, or <c
 <ul class="simple">
 <li>Select <strong>Local Traffic -&gt; Pools -&gt; Pool List -&gt; hack11_pl -&gt; Members</strong></li>
 </ul>
-<a class="reference internal image-reference" href="../../_images/image035.png"><img alt="../../_images/image035.png" src="../../_images/image035.png" style="height: 140px;" /></a>
+<a class="reference internal image-reference" href="../../_images/image035.png"><img alt="../../_images/image035.png" src="../../_images/image035.png" style="height: 200px;" /></a>
 </li>
 </ol>
 <p><strong>Create pool member enable playbook</strong></p>
@@ -322,7 +321,7 @@ Use the <code class="docutils literal"><span class="pre">-e</span></code>, or <c
 </li>
 <li><p class="first">Run this playbook enable pool member.</p>
 <ul class="simple">
-<li>Type <code class="docutils literal"><span class="pre">ansible-playbook</span> <span class="pre">playbooks/pmena.yaml</span> <span class="pre">-e</span> <span class="pre">&#64;creds.yaml</span> <span class="pre">--ask-vault-pass</span> <span class="pre">-e</span> <span class="pre">pool=&quot;hack11_pl&quot;</span> <span class="pre">-e</span> <span class="pre">pmhost=&quot;10.1.20.17&quot;</span> <span class="pre">-e</span> <span class="pre">pmport=&quot;80&quot;</span></code></li>
+<li>Type <code class="docutils literal"><span class="pre">ansible-playbook</span> <span class="pre">playbooks/enable.yaml</span> <span class="pre">-e</span> <span class="pre">&#64;creds.yaml</span> <span class="pre">--ask-vault-pass</span> <span class="pre">-e</span> <span class="pre">pool=&quot;hack11_pl&quot;</span> <span class="pre">-e</span> <span class="pre">pmhost=&quot;10.1.20.17&quot;</span> <span class="pre">-e</span> <span class="pre">pmport=&quot;80&quot;</span></code></li>
 </ul>
 </li>
 <li><p class="first">Verify if pool member 10.1.20.17 is <code class="docutils literal"><span class="pre">enabled</span></code></p>
@@ -341,7 +340,7 @@ Use the <code class="docutils literal"><span class="pre">-e</span></code>, or <c
 		        <a href="lab2.html" title="2.2.2. Deploy BIG-IP App Services" accesskey="p" class="btn btn-primary pull-left"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Previous</a>
            
            
-              <a href="../module3/module2.html" title="2.3. Module – Working with Ansible variables" accesskey="n" class="btn btn-primary pull-right">Next <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+              <a href="../module3/module3.html" title="2.3. Lab 3 - App Deployment Workflows" accesskey="n" class="btn btn-primary pull-right">Next <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
            
 		     </div>
          </div>

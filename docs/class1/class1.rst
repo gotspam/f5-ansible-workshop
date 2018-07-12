@@ -2,12 +2,9 @@ Class - |classname|
 ===================
 
 
-This class covers the following topics:
-
-- Installation and configuration of Ansible
-- Basic |bip| administration with Ansible
-- Slightly more advanced Ansible usage
-- Debugging Ansible problems
+This lab is an introduction to Automation with F5 and Ansible.  You will learn
+to deploy applications using Ansible as well as automating the deployment of
+F5 Applicaiton Services.
 
 Expected time to complete: **3 hours**
 
