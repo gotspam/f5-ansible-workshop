@@ -6,38 +6,14 @@
     valid_certs: no
 
   tasks:
-    - name: delete folder5
-      file:
-        path: /var/www/server/5/
-        state: absent
-      tags: serv5
-
-    - name: create folder5
-      file:
-        path: /var/www/server/5/
-        state: directory
-      tags: serv5
-
     - name: deploy to server5
       copy:
-        src: ../files/f5-hello-world-develop/hw/
-        dest: /var/www/server/5/
+        src: ../files/f5-hello-world-develop/customizations/blue.css
+        dest: /var/www/server/5/css/custom.css
       tags: serv5
-
-    - name: delete folder6
-      file:
-        path: /var/www/server/6/
-        state: absent
-      tags: serv6
-
-    - name: create folder6
-      file:
-        path: /var/www/server/6/
-        state: directory
-      tags: serv6
 
     - name: deploy to server6
       copy:
-        src: ../files/f5-hello-world-develop/hw/
-        dest: /var/www/server/6/
+        src: ../files/f5-hello-world-develop/customizations/green.css
+        dest: /var/www/server/6/css/custom.css
       tags: serv6
