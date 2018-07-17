@@ -1,13 +1,13 @@
 ---
 
-vs_name: "hack11"
-vs_ip: "10.1.10.11"
+vs_name: "www12"
+vs_ip: "10.1.10.12"
 vs_port: "80"
 vs_snat: "Automap"
-pl_name: "app2_pl"
+pl_name: "www12_pl"
 pl_monitor: "/Common/http"
-pl_lb: "round-robin"
+pl_lb: "least-connections-member"
 nd_qty: "2"
 nd_port: "80"
-nd_ip1: 10.1.20.17
-nd_ip2: 10.1.20.20
+nd_ip1: 10.1.20.11
+nd_ip2: 10.1.20.12

@@ -1,0 +1,9 @@
+---
+- name: "Destroy services (AS3)"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+  roles:
+    - destroy_all_services
+  vars:
+    resource_group_name: "{{ inventory_hostname }}"

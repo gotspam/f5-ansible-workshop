@@ -5,4 +5,3 @@ bigip_env:
   F5_USER: "{{ bigip_user }}"
   F5_PASSWORD: "{{ bigip_pass }}"
   F5_VALIDATE_CERTS: "no"
-...
