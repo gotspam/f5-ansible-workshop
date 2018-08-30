@@ -15,7 +15,6 @@
         bigip_pool_member:
             description: "app1 web servers"
             host: "{{ item.host }}"
-            name: "{{ item.name }}"
             password: "{{ password }}"
             pool: "app1_pl"
             port: "80"
