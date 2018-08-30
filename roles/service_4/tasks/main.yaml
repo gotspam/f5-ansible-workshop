@@ -23,7 +23,7 @@
 
 - name: Add an iAppLX Package for Application Services 3
   bigip_iapplx_package:
-    package: "roles/service_4/files/f5-appsvcs-3.1.0-3.noarch.rpm"
+    package: "roles/service_4/files/f5-appsvcs-3.3.0-6.noarch.rpm"
     password: "{{ bigip_pass }}"
     server: "{{resource_group_name}}"
     state: present

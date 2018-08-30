@@ -57,8 +57,8 @@ You will create a consolidated playbook to deploy VS, Pools and associated Membe
 
         - name: Add nodes
           bigip_node:
-            name: "{{ pmhost1 }}"
-            host: "{{ pmhost1}}"
+            name: "{{ item.name }}"
+            host: "{{ item.host }}"
             state: "{{ state }}"
           loop:
             - { name: "{{ pmhost1 }}", host: "{{ pmhost1 }}" }
