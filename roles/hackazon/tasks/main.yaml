@@ -1,0 +1,81 @@
+# Create or update a Hackazon, AS3 Build WAF Application
+
+- name: Wait a maximum of 300 seconds for BIG-IP to be ready to take configuration
+  bigip_wait:
+    timeout: 300
+    password: "{{ bigip_pass }}"
+    server: "{{resource_group_name}}"
+    user: "{{ bigip_user }}"
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Create ASM policy, compact XML file
+  bigip_asm_policy:
+    name: foo-policy
+    template: Rapid Deployment Policy
+    active: yes
+    user: "{{ bigip_user }}"
+    password: "{{ bigip_pass }}"
+    server: "{{resource_group_name}}" 
+    validate_certs: no 
+
+- name: Add an iAppLX Package for Application Services 3
+  bigip_iapplx_package:
+    package: "{{ roles_path }}/hackazon/files/f5-appsvcs-3.3.0-6.noarch.rpm"
+    password: "{{ bigip_pass }}"
+    server: "{{resource_group_name}}"
+    state: present
+    user: "{{ bigip_user }}"
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Get BIG-IP Authentication Token from {{resource_group_name}}
+  delegate_to: localhost
+  uri:
+    body: '{"username":"{{ bigip_user }}","password":"{{ bigip_pass }}","loginProvidername":"tmos"}'
+    body_format: json
+    method: POST
+    url: "https://{{resource_group_name}}/mgmt/shared/authn/login"
+    status_code: 200
+    validate_certs: no
+  register: bigip_auth_response
+
+- name: Assign Auth Token to Variable
+  set_fact:
+    bigip_auth_token: "{{ bigip_auth_response.json.token.token }}"
+
+- name: Deploy Hackazon (AS3 Build WAF Application) from AS3
+  delegate_to: localhost
+  uri:
+    body: "{{ lookup('file','hackazon.json') | to_json }}"
+    body_format: json
+    headers:
+      X-F5-Auth-Token: "{{ bigip_auth_token }}"
+    method: POST
+    status_code: 200
+    url: "https://{{resource_group_name}}/mgmt/shared/appsvcs/declare"
+    validate_certs: no
+
+- name: Wait a maximum of 300 seconds for BIG-IP to be ready to take configuration
+  bigip_wait:
+    timeout: 300
+    password: "{{ bigip_pass }}"
+    server: "{{resource_group_name}}"
+    user: "{{ bigip_user }}"
+    validate_certs: no
+  delegate_to: localhost
+  
+- name: Add Security Log Profile
+  delegate_to: localhost
+  uri:
+    body: |
+      {
+        "securityLogProfiles": ["\"/Common/waf_log\""]
+        }
+    body_format: json
+    headers:
+      X-F5-Auth-Token: "{{ bigip_auth_token }}"
+    method: PATCH
+    status_code: 200
+    url: "https://{{resource_group_name}}/mgmt/tm/ltm/virtual/~Hackazon~hackazon~serviceMain"
+    validate_certs: no

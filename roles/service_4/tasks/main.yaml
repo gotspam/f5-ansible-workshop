@@ -15,7 +15,7 @@
     user: "{{ bigip_user }}"
     password: "{{ bigip_pass }}"
     name: Service_4_WAF
-    file: "roles/service_4/files/linux-high.xml"
+    file: "../roles/service_4/files/linux-high.xml"
     active: yes
     state: present
     validate_certs: no

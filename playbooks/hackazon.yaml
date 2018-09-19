@@ -1,69 +1,19 @@
 ---
-
-- name: "Imperative: Deploy / teardown a web app (VS, pool, nodes)"
+- name: "Declarative: Deploy / teardown a service template (AS3)"
   hosts: bigips
   gather_facts: False
   connection: local
-
+  roles:
+    - hackazon
   vars:
-    vs_name: "hack11"
-    vs_ip: "10.1.10.11"
-    vs_port: "443"
-    vs_snat: "automap"
-    pl_name: "hack11_pl"
-    pl_monitor: "/Common/http"
-    pl_lb: "round-robin"
-    nd_port: "80"
-    nd_ip1: "10.1.20.17"
-    nd_ip2: "10.1.20.20"
+    roles_path: "/Users/rabago/Documents/f5-ansible-workshop/f5-ansible-workshop"
+    resource_group_name: "{{ inventory_hostname }}"
     state: "present"
 
-  environment: "{{ bigip_env }}"
-
-  tasks:
-    - name: Adjust a VS
-      bigip_virtual_server:
-        name: "{{ vs_name }}"
-        destination: "{{ vs_ip }}"
-        port: "{{ vs_port }}"
-        snat: "{{ vs_snat }}"
-        all_profiles:
-          - "tcp-lan-optimized"
-          - "clientssl"
-          - "http"
-          - "analytics"
-        state: "{{ state }}"
-
-    - name: Adjust a pool
-      bigip_pool:
-        name: "{{ pl_name }}"
-        monitors: "{{ pl_monitor }}"
-        lb_method: "{{ pl_lb }}"
-        state: "{{ state }}"
-
-    - name: Add nodes
-      bigip_node:
-        name: "{{ item.name }}"
-        host: "{{ item.host }}"
-        state: "{{ state }}"
-      loop:
-        - { name: "{{ nd_ip1 }}", host: "{{ nd_ip1 }}" }
-        - { name: "{{ nd_ip2 }}", host: "{{ nd_ip2 }}" }
-
-    - name: Add nodes to pool
-      bigip_pool_member:
-        host: "{{ item.host }}"
-        port: "{{ nd_port }}"
-        pool: "{{ pl_name }}"
-        state: "{{ state }}"
-      loop:
-        - { host: "{{ nd_ip1 }}" }
-        - { host: "{{ nd_ip2 }}" }
-      when: state == "present"
-
-    - name: Update a VS
-      bigip_virtual_server:
-        name: "{{ vs_name }}"
-        pool: "{{ pl_name }}"
-        state: "{{ state }}"
-      when: state == "present"
+  vars_prompt:
+    - name: "bigip_user"
+      prompt: "Enter BIG-IP username"
+      private: yes
+    - name: "bigip_pass"
+      prompt: "Enter BIG-IP password"
+      private: yes
