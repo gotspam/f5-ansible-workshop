@@ -1,0 +1,27 @@
+---
+
+- name: Add Pool Members to Pool
+  hosts: bigips
+  connection: local
+
+  vars:
+    valid_certs: no
+    username: admin
+    password: admin
+    server: 10.1.1.245
+
+  tasks:
+      - name: Add nodes to pool
+        bigip_pool_member:
+            description: "app1 web servers"
+            host: "{{ item.host }}"
+            password: "{{ password }}"
+            pool: "app1_pl"
+            port: "80"
+            server: "{{ server }}"
+            user: "{{ username }}"
+            validate_certs: "{{ valid_certs }}"
+        delegate_to: localhost
+        loop:
+          - { host: 10.1.20.11 }
+          - { host: 10.1.20.12 }

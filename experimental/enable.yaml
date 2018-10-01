@@ -1,0 +1,26 @@
+---
+
+- name: "Enable Pool Member"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+
+  vars:
+    pool: ""
+    pmhost: ""
+    pmport: ""
+    state: "present"
+    session_state: "enabled"
+    monitor_state: "enabled"
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: Enable pool member
+      bigip_pool_member:
+        state: "{{ state }}"
+        session_state: "{{ session_state }}"
+        monitor_state: "{{ monitor_state }}"
+        host: "{{ pmhost }}"
+        port: "{{ pmport }}"
+        pool: "{{ pool }}"

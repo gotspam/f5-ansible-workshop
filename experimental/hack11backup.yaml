@@ -23,7 +23,46 @@
     valid_certs: no
 
   tasks:
-    - name: Adjust a VS
+    - name: Create a pool
+      bigip_pool:
+        name: "{{ pl_name }}"
+        monitors: "{{ pl_monitor }}"
+        lb_method: "{{ pl_lb }}"
+        password: "{{ password }}"
+        server: "{{ server }}"
+        user: "{{ username }}"
+        validate_certs: "{{ valid_certs }}"
+        state: "{{ state }}"
+
+    - name: Create nodes
+      bigip_node:
+        name: "{{ item.name }}"
+        host: "{{ item.host }}"
+        password: "{{ password }}"
+        server: "{{ server }}"
+        user: "{{ username }}"
+        validate_certs: "{{ valid_certs }}"
+        state: "{{ state }}"
+      loop:
+        - { name: "{{ nd_ip1 }}", host: "{{ nd_ip1 }}" }
+        - { name: "{{ nd_ip2 }}", host: "{{ nd_ip2 }}" }
+
+    - name: Add nodes to pool
+      bigip_pool_member:
+        host: "{{ item.host }}"
+        port: "{{ nd_port }}"
+        pool: "{{ pl_name }}"
+        password: "{{ password }}"
+        server: "{{ server }}"
+        user: "{{ username }}"
+        validate_certs: "{{ valid_certs }}"
+        state: "{{ state }}"
+      loop:
+        - { host: "{{ nd_ip1 }}" }
+        - { host: "{{ nd_ip2 }}" }
+      when: state == "present"
+
+    - name: Create a Virtual Server
       bigip_virtual_server:
         name: "{{ vs_name }}"
         destination: "{{ vs_ip }}"
@@ -34,58 +73,9 @@
           - "clientssl"
           - "http"
           - "analytics"
-        state: "{{ state }}"
-        password: "{{ password }}"
-        server: "{{ server }}"
-        user: "{{ username }}"
-        validate_certs: "{{ valid_certs }}"
-
-    - name: Adjust a pool
-      bigip_pool:
-        name: "{{ pl_name }}"
-        monitors: "{{ pl_monitor }}"
-        lb_method: "{{ pl_lb }}"
-        state: "{{ state }}"
-        password: "{{ password }}"
-        server: "{{ server }}"
-        user: "{{ username }}"
-        validate_certs: "{{ valid_certs }}"
-
-    - name: Add nodes
-      bigip_node:
-        name: "{{ item.name }}"
-        host: "{{ item.host }}"
-        state: "{{ state }}"
-        password: "{{ password }}"
-        server: "{{ server }}"
-        user: "{{ username }}"
-        validate_certs: "{{ valid_certs }}"
-      loop:
-        - { name: "{{ nd_ip1 }}", host: "{{ nd_ip1 }}" }
-        - { name: "{{ nd_ip2 }}", host: "{{ nd_ip2 }}" }
-
-    - name: Add nodes to pool
-      bigip_pool_member:
-        host: "{{ item.host }}"
-        port: "{{ nd_port }}"
         pool: "{{ pl_name }}"
-        state: "{{ state }}"
         password: "{{ password }}"
         server: "{{ server }}"
         user: "{{ username }}"
         validate_certs: "{{ valid_certs }}"
-      loop:
-        - { host: "{{ nd_ip1 }}" }
-        - { host: "{{ nd_ip2 }}" }
-      when: state == "present"
-
-    - name: Update a VS
-      bigip_virtual_server:
-        name: "{{ vs_name }}"
-        pool: "{{ pl_name }}"
         state: "{{ state }}"
-        password: "{{ password }}"
-        server: "{{ server }}"
-        user: "{{ username }}"
-        validate_certs: "{{ valid_certs }}"
-      when: state == "present"

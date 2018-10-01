@@ -1,0 +1,19 @@
+---
+- name: "Declarative: Deploy / teardown a service template (AS3)"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+  roles:
+    - hackazon
+  vars:
+    roles_path: "/Users/rabago/Documents/f5-ansible-workshop/f5-ansible-workshop"
+    resource_group_name: "{{ inventory_hostname }}"
+    state: "present"
+
+  vars_prompt:
+    - name: "bigip_user"
+      prompt: "Enter BIG-IP username"
+      private: yes
+    - name: "bigip_pass"
+      prompt: "Enter BIG-IP password"
+      private: yes

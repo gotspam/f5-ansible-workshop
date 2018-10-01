@@ -1,10 +1,10 @@
 ---
 
-vs_name: "app3_vs"
-vs_ip: "10.1.10.30"
+vs_name: "www12"
+vs_ip: "10.1.10.12"
 vs_port: "80"
 vs_snat: "Automap"
-pl_name: "app3_pl"
+pl_name: "www12_pl"
 pl_monitor: "/Common/http"
 pl_lb: "least-connections-member"
 nd_port: "80"

@@ -1,0 +1,33 @@
+---
+
+- name: "Declarative: Deploy / teardown a service template (iApp)"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+
+  vars:
+    state: "present"
+    vs_name: ""
+    vs_ip: ""
+    vs_group: ""
+
+  tasks:
+    - import_tasks: getsl.yaml
+      when: state == "absent"
+
+    - name: Check if {{ vs_name }} is deployed
+      meta: end_play
+      when: 'state == "absent" and vs_name not in (service_list.content|from_json)["items"]'
+
+    - name: Build POST body
+      template: src=f5.http.j2 dest=./f5.http.yaml
+
+    - name: Adjust an iApp
+      uri:
+        url: "https://{{ inventory_hostname }}/mgmt/tm/cloud/services/iapp/{{ vs_name }}"
+        method: "{{ (state == 'present') | ternary('POST', 'DELETE') }}"
+        body: "{{ (lookup('template','f5.http.yaml') | from_yaml) }}"
+        body_format: json
+        user: "{{ bigip_user }}"
+        password: "{{ bigip_pass }}"
+        validate_certs: no

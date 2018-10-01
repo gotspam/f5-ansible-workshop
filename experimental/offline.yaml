@@ -1,0 +1,26 @@
+---
+
+- name: "Force Offline Pool Member"
+  hosts: bigips
+  gather_facts: False
+  connection: local
+
+  vars:
+    pool: ""
+    pmhost: ""
+    pmport: ""
+    state: "present"
+    session_state: "disabled"
+    monitor_state: "disabled"
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: Force pool member offline
+      bigip_pool_member:
+        state: "{{ state }}"
+        session_state: "{{ session_state }}"
+        monitor_state: "{{ monitor_state }}"
+        host: "{{ pmhost }}"
+        port: "{{ pmport }}"
+        pool: "{{ pool }}"

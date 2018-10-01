@@ -1,0 +1,19 @@
+---
+
+- name: Deploy blue www servers
+  hosts: appservers
+  vars:
+    valid_certs: no
+
+  tasks:
+    - name: Upload green changes to server17
+      copy:
+        src: ../roles/appserv/files/HackazonGreen.png
+        dest: /var/www/hackazon1/web/images/Hackazon.png
+      tags: 17green
+
+    - name: Upload green changes to server20
+      copy:
+        src: ../roles/appserv/files/HackazonGreen.png
+        dest: /var/www/hackazon/web/images/Hackazon.png
+      tags: 20green

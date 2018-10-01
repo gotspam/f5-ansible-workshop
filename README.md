@@ -14,7 +14,12 @@
 ## Description
 
 The purpose of this repository is to provide basic demo of deploying BIG-IP
-services using Ansible.
+services using Ansible.  This repository is used for multiple ansible labs.
+
+Ansible Workshops
+https://ansible-workshop.readthedocs.io/en/latest/
+
+F5 Agility 2018 Architectures with Ansible https://clouddocs.f5.com/training/community/programmability/html/miniclass/miniclass1/miniclass1.html
 
 Credit given to https://github.com/ArtiomL/f5-ansible which includes Ansible container and full infrastructure-as-code demo.
 
